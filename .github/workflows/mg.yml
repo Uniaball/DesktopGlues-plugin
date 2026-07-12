@@ -52,8 +52,11 @@ jobs:
           git clone --depth 1 https://github.com/KhronosGroup/SPIRV-Cross.git 3rdparty/SPIRV-Cross
 
       - name: Decode keystore
+        env:
+          KEYSTORE_B64: ${{ secrets.KEYSTORE_BASE64 }}
         run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > ./keystore.jks
+          printf '%s' "$KEYSTORE_B64" | base64 -d > ./keystore.jks
+          chmod 600 ./keystore.jks
 
       - name: Inject build settings into submodule build.gradle
         run: |
@@ -82,6 +85,10 @@ jobs:
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           LTO_LEVEL: ${{ env.LTO_LEVEL }}
           USE_EXTRA_OPTIMIZATIONS: ${{ env.USE_EXTRA_OPTIMIZATIONS }}
+          
+      - name: Clean up keystore
+        if: always()
+        run: rm -f ./keystore.jks
 
       - name: Upload apk
         uses: actions/upload-artifact@v7
