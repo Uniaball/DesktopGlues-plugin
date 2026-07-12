@@ -1,7 +1,7 @@
-package com.fcl.plugin.mobileglues.settings
+package com.fcl.plugin.desktopglues.settings
 
 import android.content.Context
-import com.fcl.plugin.mobileglues.utils.Constants
+import com.fcl.plugin.desktopglues.utils.Constants
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 /**
- * MobileGlues 配置类。
+ * DesktopGlues 配置类。
  */
 class MGConfig private constructor(val context: Context, private var isInitializing: Boolean) {
 

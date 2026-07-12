@@ -1,4 +1,4 @@
-package com.fcl.plugin.mobileglues
+package com.fcl.plugin.desktopglues
 
 import org.junit.Test
 

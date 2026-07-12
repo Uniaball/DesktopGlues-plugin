@@ -1,44 +1,29 @@
-MobileGlues-plugin
-====
+# DesktopGlues-plugin
+
+## About this project
+
+**DesktopGlues-plugin** 是 [MobileGlues-plugin](https://github.com/MobileGL-Dev/MobileGlues-plugin) 的一个 **Fork 魔改版**，基于原项目进行二次开发。
+
+- **上游项目**：[MobileGlues-plugin](https://github.com/MobileGL-Dev/MobileGlues-plugin)
+- **感谢原项目开发者**：Swung、BZLZHH、Tungsten 等所有贡献者。
+
+---
 
 > [!WARNING]
 > 
-> **This repository may contain unreleased Dev versions**
+> **此仓库可能包含未发布的开发版本**
 >
-> If you are a regular user, **do not use these versions**, as they may cause **serious rendering issues**.  
-> Please visit [MobileGlues-release](https://github.com/MobileGL-Dev/MobileGlues-release) to get the latest stable release.
+> 如果你是普通用户，**请不要使用这些版本**，它们可能导致**严重的渲染问题**。  
+> 请访问 [DesktopGlues-release](https://github.com/Uniaball/DesktopGlues/releases) 获取最新的稳定版本。
 
-Please see [MobileGlues](https://github.com/MobileGL-Dev/MobileGlues) and [MobileGlues-release](https://github.com/MobileGL-Dev/MobileGlues-release) to get more information.
+请参阅 [DesktopGlues](https://github.com/Uniaball/DesktopGlues) 获取更多信息。
 
-License
-====
-MobileGlues is licensed under **GNU LGPL-2.1 License**.
+## License
 
-Please see [LICENSE](https://github.com/MobileGL-Dev/MobileGlues-plugin/blob/main/LICENSE).
+DesktopGlues 采用 **GNU LGPL-2.1 License** 许可（继承自上游项目）。
 
-Third party components
-====
-Please see [MobileGlues-release](https://github.com/MobileGL-Dev/MobileGlues-release).
+请参阅 [LICENSE](LICENSE)。
 
-Check signature of your release
-====
-This portion is a guide to help you identify if your apk is an official release from
-MobileGlues dev.
+## Third party components
 
-In your Android build-tools, find `apksigner`. Then run the following command:
-```bash
-apksigner verify --print-certs path/to/MobileGlues-plugin.apk
-```
-
-It should print out:
-```bash
-Signer #1 certificate DN: CN=MGDev, OU=MGDev, O=MGDev, L=Unknown, ST=Unknown, C=CN
-Signer #1 certificate SHA-256 digest: 324f4efaff81632373dec9bc714a904b64740249410b551b61805340e42ff5d5
-Signer #1 certificate SHA-1 digest: 615bc8b2741c24e7e5847b0c5c1d6816d5b0763a
-Signer #1 certificate MD5 digest: 320ede9d22c709fe3792c804d5e00153
-```
-
-Check whether the `certificate DN` and `certificate digest` portion matches exactly like above.
-
-In order that you may want to check against public key file, `pub.cer` and `pub.pem` are also provided.
-You can use your utility as you like to check your apk against those files.
+请参阅 [DesktopGlues](https://github.com/Uniaball/DesktopGlues)。

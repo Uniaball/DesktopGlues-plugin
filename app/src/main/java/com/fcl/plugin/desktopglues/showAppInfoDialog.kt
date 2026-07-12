@@ -1,4 +1,4 @@
-package com.fcl.plugin.mobileglues
+package com.fcl.plugin.desktopglues
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -6,14 +6,14 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.widget.TextView
 import androidx.core.net.toUri
-import com.fcl.plugin.mobileglues.settings.MGConfig
+import com.fcl.plugin.desktopglues.settings.MGConfig
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 @SuppressLint("InflateParams")
 fun showAppInfoDialog(context: Context, config: MGConfig?) {
     val view = LayoutInflater.from(context).inflate(R.layout.dialog_app_info, null, false)
-    view.findViewById<TextView>(R.id.info_version).text = BuildConfig.VERSION_NAME
+    view.findViewById<TextView>(R.id.info_version).text = "${BuildConfig.VERSION_NAME}（该版本仅为 MobileGlues 的魔改版本）"
 
     MaterialAlertDialogBuilder(context)
         .setTitle(R.string.dialog_info)
@@ -26,7 +26,7 @@ fun showAppInfoDialog(context: Context, config: MGConfig?) {
         }
         .setPositiveButton(R.string.dialog_github) { _, _ ->
             context.startActivity(
-                Intent(Intent.ACTION_VIEW, "https://github.com/MobileGL-Dev/MobileGlues-release".toUri())
+                Intent(Intent.ACTION_VIEW, "https://github.com/Uniaball/DesktopGlues/releases".toUri())
             )
         }
         .show()

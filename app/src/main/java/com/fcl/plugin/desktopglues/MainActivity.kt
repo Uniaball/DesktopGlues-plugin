@@ -1,4 +1,4 @@
-package com.fcl.plugin.mobileglues
+package com.fcl.plugin.desktopglues
 
 import android.Manifest
 import android.content.DialogInterface
@@ -37,10 +37,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import com.fcl.plugin.mobileglues.databinding.ActivityMainBinding
-import com.fcl.plugin.mobileglues.settings.MGConfig
-import com.fcl.plugin.mobileglues.utils.Constants
-import com.fcl.plugin.mobileglues.utils.toast
+import com.fcl.plugin.desktopglues.databinding.ActivityMainBinding
+import com.fcl.plugin.desktopglues.settings.MGConfig
+import com.fcl.plugin.desktopglues.utils.Constants
+import com.fcl.plugin.desktopglues.utils.toast
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -398,9 +398,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener,
         if (newValue == previous) return
 
         if (previous == 0) {
-            showCountdownWarningDialog(
+            showWarningDialog(
                 messageRes = R.string.warning_enabling_custom_gl_version,
-                cooldownSeconds = 41,
                 onConfirm = { config?.customGLVersion = newValue },
                 onCancel = {
                     revertSpinner(
@@ -473,7 +472,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener,
     ) {
         MaterialAlertDialogBuilder(this)
             .setTitle(R.string.dialog_title_warning)
-            .setMessage(getString(messageRes))
+            .setMessage(getStyledMessage(messageRes))
             .setCancelable(false)
             .setPositiveButton(R.string.dialog_positive) { _, _ -> onConfirm() }
             .setNegativeButton(R.string.dialog_negative) { _, _ -> onCancel() }
@@ -520,20 +519,20 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener,
         }.start()
     }
 
-    // ---- 删除 MobileGlues ----
+    // ---- 删除 DesktopGlues ----
     private fun showRemoveConfirmationDialog() {
         showCountdownWarningDialog(
             R.string.remove_mg_files_message,
             10,
-            { removeMobileGluesCompletely() },
+            { removeDesktopGluesCompletely() },
             {})
     }
 
-    private fun removeMobileGluesCompletely() {
+    private fun removeDesktopGluesCompletely() {
         val view = LayoutInflater.from(this).inflate(R.layout.progress_dialog_md3, null)
 
         val progressDialog = MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.removing_mobileglues)
+            .setTitle(R.string.removing_desktopglues)
             .setView(view)
             .setCancelable(false)
             .show()

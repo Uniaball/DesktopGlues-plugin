@@ -4,17 +4,17 @@ plugins {
 }
 
 android {
-    namespace = "com.fcl.plugin.mobileglues"
+    namespace = "com.fcl.plugin.desktopglues"
     compileSdk = 36
 
     ndkVersion = "27.3.13750724"
 
     defaultConfig {
-        applicationId = "com.fcl.plugin.mobileglues"
+        applicationId = "com.fcl.plugin.desktopglues"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1350
-        versionName = "1.3.5"
+        versionCode = 1070
+        versionName = "1.0.7"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -39,10 +39,10 @@ android {
         }
 
         configureEach {
-            resValue("string","app_name","MobileGlues")
+            resValue("string","app_name","DesktopGlues")
 
-            manifestPlaceholders["des"] = "MobileGlues (OpenGL 4.0, 1.17+)"
-            manifestPlaceholders["renderer"] = "MobileGlues:libmobileglues.so:libmobileglues.so"
+            manifestPlaceholders["des"] = "DesktopGlues (OpenGL 4.0, 1.17+)"
+            manifestPlaceholders["renderer"] = "DesktopGlues:libdesktopglues.so:libdesktopglues.so"
 
             manifestPlaceholders["minMCVer"] = "1.17"
             manifestPlaceholders["maxMCVer"] = "" //为空则不限制 No restriction if empty
@@ -59,8 +59,8 @@ android {
             manifestPlaceholders["pojavEnv"] = mutableMapOf<String,String>().apply {
                 put("LIBGL_ES", "3")
                 put("POJAV_RENDERER", "opengles3")
-				put("POJAVEXEC_EGL", "libmobileglues.so")
-				put("LIBGL_EGL", "libmobileglues.so")
+				put("POJAVEXEC_EGL", "libdesktopglues.so")
+				put("LIBGL_EGL", "libdesktopglues.so")
             }.run {
                 var env = ""
                 forEach { (key, value) ->
@@ -100,5 +100,5 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.constraintlayout)
     implementation(libs.google.material)
-    implementation(project(":MobileGlues"))
+    implementation(project(":DesktopGlues"))
 }

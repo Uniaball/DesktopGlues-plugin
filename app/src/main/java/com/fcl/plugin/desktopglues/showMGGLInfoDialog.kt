@@ -1,8 +1,8 @@
-package com.fcl.plugin.mobileglues
+package com.fcl.plugin.desktopglues
 
 import android.content.Context
 import android.widget.TextView
-import com.fcl.plugin.mobileglues.settings.MGConfig
+import com.fcl.plugin.desktopglues.settings.MGConfig
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 object MGInfoGetter {
@@ -12,13 +12,13 @@ object MGInfoGetter {
 
     external fun setenv(key: String, value: String, overwrite: Int): Int
 
-    external fun getMobileGluesGLInfo(): String
+    external fun getDesktopGluesGLInfo(): String
 
     val mgGLInfo: String
         get() = try {
             setenv("MG_PLUGIN_STATUS", 1.toString(), 1)
             setenv("MG_DIR_PATH", MGConfig.cacheMGDir.path, 1)
-            getMobileGluesGLInfo()
+            getDesktopGluesGLInfo()
         } catch (e: Throwable) {
             "Error: ${e.message}"
         }
