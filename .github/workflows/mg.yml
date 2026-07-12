@@ -58,22 +58,6 @@ jobs:
           printf '%s' "$KEYSTORE_B64" | base64 -d > ./keystore.jks
           chmod 600 ./keystore.jks
 
-      - name: Inject build settings into submodule build.gradle
-        run: |
-          cd DesktopGlues
-          sed -i '/ndkVersion = "27.3.13750724"/a \
-              ndk { \
-                  abiFilters.add("arm64-v8a") \
-              } \
-              externalNativeBuild { \
-                  cmake { \
-                      arguments.add("-DUSE_EXTRA_OPTIMIZATIONS=" + (System.getenv("USE_EXTRA_OPTIMIZATIONS") ?: "ON")) \
-                      val ltoLevel = System.getenv("LTO_LEVEL")?.toIntOrNull() ?: 0 \
-                      val ltoFlag = when(ltoLevel) { 2 -> "-flto" 1 -> "-flto=thin" else -> "" } \
-                      arguments.add("-DLTO_FLAG=" + ltoFlag) \
-                  } \
-              }' build.gradle.kts
-
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
 
