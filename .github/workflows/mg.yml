@@ -41,16 +41,6 @@ jobs:
           echo "y" | sdkmanager "ndk;27.3.13750724"
           echo "ndk.dir=$ANDROID_HOME/ndk/27.3.13750724" >> local.properties
 
-      - name: Clone submodule dependencies
-        run: |
-          cd DesktopGlues/MobileGlues-cpp
-          git clone --depth 1 https://github.com/g-truc/glm.git 3rdparty/glm
-          git clone --depth 1 https://github.com/stbrumme/xxhash.git 3rdparty/xxhash
-          git clone --depth 1 https://android.googlesource.com/platform/external/perfetto 3rdparty/perfetto
-          git clone --depth 1 https://github.com/MobileGL-Dev/FastSTL.git include/FastSTL
-          git clone --depth 1 https://github.com/KhronosGroup/glslang.git 3rdparty/glslang
-          git clone --depth 1 https://github.com/KhronosGroup/SPIRV-Cross.git 3rdparty/SPIRV-Cross
-
       - name: Decode keystore
         env:
           KEYSTORE_B64: ${{ secrets.KEYSTORE_BASE64 }}
