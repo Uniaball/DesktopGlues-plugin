@@ -132,6 +132,15 @@ data class MultidrawBenchReport(
 /** 排好序的一项推荐：条目 + 相对耗时（最快 = 1.0；没测出来为 null，排在末尾）。 */
 data class RankedItem<T>(val item: T, val relativeCost: Double?)
 
+/** 跑分结果推断出的设备档位。 */
+enum class MultidrawBenchTier {
+    /** 判据函数跑到了快路径：这台设备算高端。 */
+    HighEnd,
+
+    /** 判据函数测出来了但没跑到快路径：低端。 */
+    LowEnd,
+}
+
 /**
  * 从跑分结果算推荐排序。
  *
@@ -153,5 +162,30 @@ object MultidrawBenchAnalyzer {
             .filter { it !in perBackend }
             .map { RankedItem(it, null) }
         return ranked + unmeasured
+    }
+
+    /**
+     * 从跑分结果推断这台设备算不算高端。
+     *
+     * 判据只取 glMultiDrawElementsBaseVertex 一个函数：它是候选后端最多的入口点，
+     * 各后端之间最能拉开差距，一次测量就能把驱动能力分出来。看的是实测驱动
+     * （[MultidrawBenchReport.angleInUse]）而不是配置意图——配置要 ANGLE 却退回
+     * 系统驱动时，数字是在系统驱动上量出来的，就得按系统驱动的标准判。
+     *
+     * - 系统驱动：最快的是 basevertex 或 indirect，说明驱动把单次调用的快路径
+     *   给了这个函数，推断为高端。
+     * - ANGLE：最快的是 multiindirect（整批一次提交），推断为高端。
+     * - 测出来了但都不满足，就是低端；判据函数压根没测出来（这次只跑了别的函数）
+     *   无从推断，返回 null。
+     */
+    fun inferTier(report: MultidrawBenchReport): MultidrawBenchTier? {
+        val fastest = report.timings[MultidrawEntry.ElementsBaseVertex]
+            ?.minByOrNull { it.value }?.key ?: return null
+        val highEnd = if (report.angleInUse) {
+            fastest == MultidrawBackend.MultiIndirect
+        } else {
+            fastest == MultidrawBackend.BaseVertex || fastest == MultidrawBackend.Indirect
+        }
+        return if (highEnd) MultidrawBenchTier.HighEnd else MultidrawBenchTier.LowEnd
     }
 }

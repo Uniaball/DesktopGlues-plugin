@@ -42,6 +42,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fcl.plugin.desktopglues.R
 import com.fcl.plugin.desktopglues.settings.MGConfig
 import com.fcl.plugin.desktopglues.settings.MultidrawBenchQuality
+import com.fcl.plugin.desktopglues.settings.MultidrawBenchTier
 import com.fcl.plugin.desktopglues.settings.MultidrawEntry
 import com.fcl.plugin.desktopglues.settings.MultidrawOrderItem
 import com.fcl.plugin.desktopglues.settings.MultidrawSettings
@@ -449,6 +450,24 @@ fun MiuixMultidrawBenchDialogs(controller: AppController) {
                     Spacer(Modifier.height(12.dp))
                     Text(
                         text = stringResource(angleNote.messageRes),
+                        fontSize = MiuixTheme.textStyles.body2.fontSize,
+                        color = MiuixTheme.colorScheme.primary,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+                // 按判据函数推断的设备档位；这次没测到判据函数时无从推断，不显示。
+                val tier = doneState?.tier
+                if (tier != null) {
+                    Spacer(Modifier.height(12.dp))
+                    Text(
+                        text = stringResource(
+                            if (tier == MultidrawBenchTier.HighEnd) {
+                                R.string.md_bench_tier_high
+                            } else {
+                                R.string.md_bench_tier_low
+                            },
+                        ),
                         fontSize = MiuixTheme.textStyles.body2.fontSize,
                         color = MiuixTheme.colorScheme.primary,
                         textAlign = TextAlign.Center,

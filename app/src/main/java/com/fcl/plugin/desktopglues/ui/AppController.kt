@@ -31,6 +31,7 @@ import com.fcl.plugin.desktopglues.settings.MultidrawBackend
 import com.fcl.plugin.desktopglues.settings.MultidrawBenchAnalyzer
 import com.fcl.plugin.desktopglues.settings.MultidrawBenchQuality
 import com.fcl.plugin.desktopglues.settings.MultidrawBenchReport
+import com.fcl.plugin.desktopglues.settings.MultidrawBenchTier
 import com.fcl.plugin.desktopglues.settings.MultidrawEntry
 import com.fcl.plugin.desktopglues.settings.MultidrawOrderItem
 import com.fcl.plugin.desktopglues.settings.MultidrawSettings
@@ -608,6 +609,8 @@ class AppController(
             val quality: Map<MultidrawEntry, MultidrawBenchQuality> = emptyMap(),
             /** 这次测量与 ANGLE 的关系里有值得告诉用户的一句话；null = 一切如预期。 */
             val angleNote: BenchAngleNote? = null,
+            /** 按判据函数推断的设备档位；null = 这次没测到判据函数，无从推断。 */
+            val tier: MultidrawBenchTier? = null,
         ) : BenchState {
             /** 有函数抖到压不下去，采用这份结果就得用户自己拍板。 */
             val anyNoisy: Boolean get() = quality.values.any { it.noisy }
@@ -791,6 +794,7 @@ class AppController(
                     rankings = rankings,
                     quality = report.quality.filterKeys { it in rankings },
                     angleNote = benchAngleNote(report, borrowed = angleDirectory != null),
+                    tier = MultidrawBenchAnalyzer.inferTier(report),
                 )
             }
         }

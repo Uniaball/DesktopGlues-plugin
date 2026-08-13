@@ -66,6 +66,8 @@
     <string name="md_bench_adopt_anyway">Adopt anyway</string>
     <string name="md_bench_adopt">Adopt</string>
     <string name="md_bench_discard">Discard</string>
+    <string name="md_bench_tier_high">Inferred: high-end device</string>
+    <string name="md_bench_tier_low">Inferred: low-end device</string>
     <string name="md_bench_failed">Benchmark failed: %1$s</string>
 
     <string name="md_bench_outdated">The GLES driver has changed. The current MultiDraw order was measured on the previous driver; re-running the benchmark is recommended.</string>

@@ -45,6 +45,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fcl.plugin.desktopglues.R
 import com.fcl.plugin.desktopglues.settings.MGConfig
 import com.fcl.plugin.desktopglues.settings.MultidrawBenchQuality
+import com.fcl.plugin.desktopglues.settings.MultidrawBenchTier
 import com.fcl.plugin.desktopglues.settings.MultidrawEntry
 import com.fcl.plugin.desktopglues.settings.MultidrawOrderItem
 import com.fcl.plugin.desktopglues.settings.MultidrawSettings
@@ -422,6 +423,22 @@ fun MultidrawBenchDialogs(controller: AppController) {
                             text = stringResource(angleNote.messageRes),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.error,
+                        )
+                    }
+                    // 按判据函数推断的设备档位；这次没测到判据函数时无从推断，不显示。
+                    val tier = s.tier
+                    if (tier != null) {
+                        Spacer(Modifier.heightIn(min = 12.dp))
+                        Text(
+                            text = stringResource(
+                                if (tier == MultidrawBenchTier.HighEnd) {
+                                    R.string.md_bench_tier_high
+                                } else {
+                                    R.string.md_bench_tier_low
+                                },
+                            ),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.primary,
                         )
                     }
                     // 单个函数时函数名已经在开头那句里了，再标一次是废话。

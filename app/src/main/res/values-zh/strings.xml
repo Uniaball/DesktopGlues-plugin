@@ -59,6 +59,8 @@
     <string name="md_bench_adopt_anyway">仍然采用</string>
     <string name="md_bench_adopt">采用</string>
     <string name="md_bench_discard">放弃</string>
+    <string name="md_bench_tier_high">推断为高端设备</string>
+    <string name="md_bench_tier_low">推断为低端设备</string>
     <string name="md_bench_failed">Benchmark 失败：%1$s</string>
 
     <string name="md_bench_outdated">GLES 驱动已变更，当前 MultiDraw 排序是在此前的驱动上测得，建议重新测量。</string>
