@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.DesktopGlues" parent="Theme.Material3.DynamicColors.DayNight.NoActionBar" />
-</resources>
+    <!-- Compose 直接铺满全屏，窗口主题只负责冷启动那一帧；edge-to-edge 由 Activity 处理。 -->
+    <style name="Theme.DesktopGlues" parent="android:Theme.Material.Light.NoActionBar" />

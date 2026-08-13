@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
@@ -51,8 +52,11 @@ android {
             manifestPlaceholders["minMCVer"] = "1.17"
             manifestPlaceholders["maxMCVer"] = "" //为空则不限制 No restriction if empty
 
+            // MG_COUNT_LAUNCH：只有经启动器起来的这一次才算「一次启动」。
+            // 基准测试、各种工具、以及本插件自己 dlopen 一次去读 GL 信息，都不该计数。
             manifestPlaceholders["boatEnv"] = mutableMapOf<String,String>().apply {
                 put("LIBGL_ES", "3")
+                put("MG_COUNT_LAUNCH", "1")
             }.run {
                 var env = ""
                 forEach { (key, value) ->
@@ -63,8 +67,9 @@ android {
             manifestPlaceholders["pojavEnv"] = mutableMapOf<String,String>().apply {
                 put("LIBGL_ES", "3")
                 put("POJAV_RENDERER", "opengles3")
-				put("POJAVEXEC_EGL", "libdesktopglues.so")
-				put("LIBGL_EGL", "libdesktopglues.so")
+                put("POJAVEXEC_EGL", "libdesktopglues.so")
+                put("LIBGL_EGL", "libdesktopglues.so")
+                put("MG_COUNT_LAUNCH", "1")
             }.run {
                 var env = ""
                 forEach { (key, value) ->
@@ -85,12 +90,15 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+        }
     }
     buildFeatures {
         buildConfig = true
-        viewBinding = true
+        aidl = true
+        compose = true
     }
     packaging {
         jniLibs {
@@ -101,8 +109,20 @@ android {
 
 dependencies {
     implementation(libs.gson)
-    implementation(libs.appcompat)
-    implementation(libs.constraintlayout)
-    implementation(libs.google.material)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.documentfile)
+    implementation(libs.miuix.ui)
+    // 协程和 lifecycleScope 以前是从 appcompat 传递依赖里蹭来的，这里显式声明。
+    implementation(libs.coroutines.android)
+    implementation(libs.lifecycle.runtime.ktx)
     implementation(project(":DesktopGlues"))
+
+    testImplementation(libs.junit)
+    testImplementation(libs.coroutines.test)
 }
