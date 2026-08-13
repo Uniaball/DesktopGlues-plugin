@@ -134,7 +134,7 @@
     <string name="third_party_intro">DesktopGlues is built with the open source projects below. Tap any of them to open its home page and read its own licence.</string>
     <string name="third_party_renderer" translatable="false">DesktopGlues</string>
     <string name="third_party_plugin">Plugin</string>
-    <string name="dialog_sponsor">Sponsor</string>
+    <string name="dialog_sponsor">Sponsor MobileGlues</string>
 
     <string name="dialog_info">App Info</string>
 
