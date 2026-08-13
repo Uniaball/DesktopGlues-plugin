@@ -14,8 +14,8 @@ android {
         applicationId = "com.fcl.plugin.desktopglues"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1080
-        versionName = "1.0.8"
+        versionCode = 1089
+        versionName = "1.0.9·Dev"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         
