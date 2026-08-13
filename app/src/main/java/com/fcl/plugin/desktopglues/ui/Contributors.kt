@@ -26,9 +26,16 @@ data class ContributorGroup(
  * 而隐私政策里承诺了没有这个权限，一份致谢名单不值得拿那条承诺去换。
  */
 val ContributorGroups = listOf(
+    // DesktopGlues
+    ContributorGroup(
+        R.string.contributors_desktopglues,
+        listOf(
+            Contributor("Uniaball", R.drawable.avatar_uniaball),
+        ),
+    ),
     // MobileGlues
     ContributorGroup(
-        R.string.third_party_renderer,
+        R.string.contributors_mobileglues,
         listOf(
             Contributor("BZLZHH", R.drawable.avatar_bzlzhh), // 256
             Contributor("Swung0x48", R.drawable.avatar_swung0x48), // 154

@@ -31,15 +31,15 @@ val SponsorChannels = listOf(
 fun sourceRepositories(): List<LinkEntry> = listOf(
     LinkEntry(
         stringResource(R.string.repo_release),
-        "https://github.com/MobileGL-Dev/MobileGlues-release",
+        "https://github.com/Uniaball/DesktopGlues/releases",
     ),
     LinkEntry(
         stringResource(R.string.repo_renderer),
-        "https://github.com/MobileGL-Dev/MobileGlues",
+        "https://github.com/Uniaball/DesktopGlues",
     ),
     LinkEntry(
         stringResource(R.string.repo_plugin),
-        "https://github.com/MobileGL-Dev/MobileGlues-plugin",
+        "https://github.com/Uniaball/DesktopGlues-plugin",
     ),
 )
 

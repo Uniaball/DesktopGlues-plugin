@@ -124,6 +124,8 @@
     <string name="repo_release">Release repository</string>
     <string name="repo_renderer" translatable="false">DesktopGlues</string>
     <string name="repo_plugin">Plugin</string>
+    <string name="contributors_desktopglues" translatable="false">DesktopGlues</string>
+    <string name="contributors_mobileglues" translatable="false">MobileGlues</string>
     <string name="contributors_title">Contributors</string>
     <string name="contributors_intro">These people wrote code, fixed bugs, translated, or filled in the compatibility tables — every one of those is a contribution. All of them are listed and thanked here. Tap an avatar to open their GitHub profile.</string>
 

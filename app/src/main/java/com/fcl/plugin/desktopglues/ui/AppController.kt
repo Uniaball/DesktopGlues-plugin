@@ -1285,7 +1285,7 @@ class AppController(
 
     companion object {
 
-        const val CUSTOM_GL_VERSION_COOLDOWN_SECONDS = 41
+        const val CUSTOM_GL_VERSION_COOLDOWN_SECONDS = 0
         const val REMOVE_COOLDOWN_SECONDS = 10
 
         /** 跑分进度的轮询间隔。native 那边是个原子计数器，问一次几乎不要钱。 */

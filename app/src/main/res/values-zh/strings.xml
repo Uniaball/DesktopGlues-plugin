@@ -118,7 +118,7 @@
     <string name="third_party_summary">站在这些项目的肩膀上</string>
     <string name="third_party_intro">DesktopGlues 用到了下面这些开源项目。点击任意一项可以打开它的主页，去看它自己的许可证原文。</string>
     <string name="third_party_plugin">插件</string>
-    <string name="dialog_sponsor">赞助我们</string>
+    <string name="dialog_sponsor">赞助 MobileGlues</string>
 
     <string name="dialog_info">应用信息</string>
 
