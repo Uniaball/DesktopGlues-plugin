@@ -104,6 +104,7 @@
     <string name="option_angle_clear_workaround_enable_1">Enable workaround #1</string>
 
     <string name="option_ext_cs">Enable Incomplete \'ARB_compute_shader\' Extension</string>
+    <string name="option_ext_atomic_counters">Enable \'ARB_shader_atomic_counters\' Extension</string>
     <string name="option_ext_timer_query">Disable Recommended \'timer_query\' Extension</string>
     <string name="option_ext_direct_state_access">Enable Advanced \'direct_state_access\' Extension</string>
     <string name="option_enable_fsr1" tools:ignore="Typos">(Experimental) Enable built-in FSR1</string>
@@ -148,6 +149,7 @@
 
     <string name="dialog_title_warning">Warning</string>
     <string name="warning_ext_cs_enable">Enabling the incomplete ARB_compute_shader extension may cause issues with some shaders and mods. Are you sure you want to continue?</string>
+    <string name="warning_ext_atomic_counters_enable">Enabling ARB_shader_atomic_counters runs the counters through SSBO emulation: shaders using atomic counters will keep working, but atomic counter buffer queries are approximate. Are you sure you want to continue?</string>
     <string name="warning_adreno_740_angle">Enabling ANGLE on Adreno 740 devices is highly likely to cause severe rendering issues. Are you sure you want to continue?</string>
     <string name="warning_enabling_angle_clear_workaround">Enabling the ANGLE Depth Clear Workaround fixes the issue of the handheld items being obscured in vanilla Minecraft 1.21.5+, but may cause performance degradation. Are you sure you want to continue?</string>
     <string name="warning_fsr1_enable">Enabling the built-in FSR1 may cause image corruption on some drivers.\nIf your device is equipped with an Adreno GPU, please enable ANGLE to ensure correct rendering.\nIt is known that enabling this feature together with ANGLE can cause performance degradation, so please enable with caution.</string>

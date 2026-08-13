@@ -367,6 +367,8 @@ data class MGConfig(
     val glVersion: GlVersion = GlVersion.Default,
     val glslCache: GlslCacheSize = GlslCacheSize.Default,
     val extComputeShader: Boolean = false,
+    /** 磁盘上 1 表示「启用 ARB_shader_atomic_counters 扩展」；native 端用 SSBO 仿真。 */
+    val extAtomicCounters: Boolean = false,
     /** 磁盘上 1 表示「启用 timer_query 扩展」；界面上的开关文案是「禁用」，取反只发生在渲染那一处。 */
     val extTimerQuery: Boolean = true,
     val extDirectStateAccess: Boolean = false,

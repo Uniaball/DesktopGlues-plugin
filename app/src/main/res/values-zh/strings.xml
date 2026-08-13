@@ -92,6 +92,7 @@
     <string name="option_angle_clear_workaround_enable_1">启用方案 #1</string>
 
     <string name="option_ext_cs">启用不完整的 ARB_compute_shader 扩展</string>
+    <string name="option_ext_atomic_counters">启用 ARB_shader_atomic_counters 扩展</string>
     <string name="option_ext_timer_query">禁用推荐的 timer_query 扩展</string>
     <string name="option_ext_direct_state_access">启用高级的 direct_state_access 扩展</string>
     <string name="option_enable_fsr1">(实验性) 启用内置的 FSR1</string>
@@ -134,6 +135,7 @@
 
     <string name="dialog_title_warning">警告</string>
     <string name="warning_ext_cs_enable">启用不完整的 ARB_compute_shader 扩展可能会导致部分光影、Mods 错误，是否继续？</string>
+    <string name="warning_ext_atomic_counters_enable">启用 ARB_shader_atomic_counters 会通过 SSBO 仿真实现计数器：使用 atomic counter 的着色器可以正常工作，但计数器缓冲查询的结果是近似值。是否继续？</string>
     <string name="warning_adreno_740_angle">在 Adreno 740 设备上启用 ANGLE 极有可能导致严重渲染错误，是否继续？</string>
     <string name="warning_enabling_angle_clear_workaround">启用 ANGLE Depth Clear 修复会修复 ANGLE 在 Minecraft 1.21.5+ 原版中的手持物品被遮挡的问题，但会导致性能下降，是否继续？</string>
     <string name="warning_fsr1_enable">启用内置的 FSR1 可能会在部分驱动下造成图像损坏。\n如果您的设备搭载了 Adreno GPU，请启用 ANGLE以确保渲染正常。\n已知此功能与 ANGLE 同时启用会导致性能下降，请谨慎启用。</string>

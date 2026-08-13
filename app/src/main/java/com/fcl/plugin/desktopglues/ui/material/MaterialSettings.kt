@@ -183,6 +183,11 @@ private fun ConfigSections(controller: AppController, config: MGConfig) {
                 onCheckedChange = controller::setExtComputeShader,
             )
             SwitchPreferenceRow(
+                title = stringResource(R.string.option_ext_atomic_counters),
+                checked = config.extAtomicCounters,
+                onCheckedChange = controller::setExtAtomicCounters,
+            )
+            SwitchPreferenceRow(
                 // 磁盘上记的是「启用」，界面上问的是「禁用」，取反只发生在这一行。
                 title = stringResource(R.string.option_ext_timer_query),
                 checked = !config.extTimerQuery,

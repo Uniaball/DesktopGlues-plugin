@@ -72,6 +72,7 @@ class MGConfigCodecTest {
             extComputeShader = true,
             extTimerQuery = false,
             extDirectStateAccess = true,
+            extAtomicCounters = true,
             fsr1 = Fsr1Preset.Balanced,
         )
 
@@ -162,15 +163,19 @@ class MGConfigCodecTest {
     @Test
     fun `booleans follow the native greater-than-zero rule`() {
         val decoded = MGConfigCodec.decode(
-            parse("""{"enableExtComputeShader":2,"enableExtTimerQuery":0,"enableExtDirectStateAccess":-1}""")
+            parse(
+                """{"enableExtComputeShader":2,"enableExtTimerQuery":0,"enableExtDirectStateAccess":-1,"enableExtShaderAtomicCounters":2}"""
+            )
         )
 
         assertTrue(decoded.extComputeShader)
         assertEquals(false, decoded.extTimerQuery)
         assertEquals(false, decoded.extDirectStateAccess)
+        assertTrue(decoded.extAtomicCounters)
 
         val encoded = encode(decoded)
         assertEquals(1, encoded.get("enableExtComputeShader").asInt)
+        assertEquals(1, encoded.get("enableExtShaderAtomicCounters").asInt)
         assertEquals(0, encoded.get("enableExtTimerQuery").asInt)
     }
 

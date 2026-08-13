@@ -21,6 +21,7 @@ internal object MGConfigCodec {
     private const val KEY_EXT_TIMER_QUERY = "enableExtTimerQuery"
     private const val KEY_EXT_COMPUTE_SHADER = "enableExtComputeShader"
     private const val KEY_EXT_DIRECT_STATE_ACCESS = "enableExtDirectStateAccess"
+    private const val KEY_EXT_ATOMIC_COUNTERS = "enableExtShaderAtomicCounters"
     private const val KEY_GLSL_CACHE = "maxGlslCacheSize"
 
     /**
@@ -41,6 +42,7 @@ internal object MGConfigCodec {
         KEY_EXT_TIMER_QUERY,
         KEY_EXT_COMPUTE_SHADER,
         KEY_EXT_DIRECT_STATE_ACCESS,
+        KEY_EXT_ATOMIC_COUNTERS,
         KEY_GLSL_CACHE,
         KEY_MULTIDRAW_LEGACY,
         KEY_MULTIDRAW_DISABLE_LEGACY,
@@ -68,6 +70,8 @@ internal object MGConfigCodec {
             extTimerQuery = root.boolOrNull(KEY_EXT_TIMER_QUERY) ?: defaults.extTimerQuery,
             extDirectStateAccess = root.boolOrNull(KEY_EXT_DIRECT_STATE_ACCESS)
                 ?: defaults.extDirectStateAccess,
+            extAtomicCounters = root.boolOrNull(KEY_EXT_ATOMIC_COUNTERS)
+                ?: defaults.extAtomicCounters,
             fsr1 = Fsr1Preset.entries.fromWire(root.intOrNull(KEY_FSR1), defaults.fsr1),
         )
     }
@@ -79,6 +83,7 @@ internal object MGConfigCodec {
             addProperty(KEY_EXT_TIMER_QUERY, config.extTimerQuery.wire)
             addProperty(KEY_EXT_COMPUTE_SHADER, config.extComputeShader.wire)
             addProperty(KEY_EXT_DIRECT_STATE_ACCESS, config.extDirectStateAccess.wire)
+            addProperty(KEY_EXT_ATOMIC_COUNTERS, config.extAtomicCounters.wire)
             addProperty(KEY_GLSL_CACHE, config.glslCache.wire)
             addProperty(KEY_DEPTH_CLEAR_FIX, config.depthClearFix.wire)
             addProperty(KEY_GL_VERSION, config.glVersion.wire)

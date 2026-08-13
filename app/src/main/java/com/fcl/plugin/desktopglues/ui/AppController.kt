@@ -479,6 +479,16 @@ class AppController(
         }
     }
 
+    fun setExtAtomicCounters(enabled: Boolean) {
+        val current = configStore.config.value ?: return
+        if (enabled == current.extAtomicCounters) return
+        if (enabled) {
+            confirmThenUpdate(R.string.warning_ext_atomic_counters_enable) { it.copy(extAtomicCounters = true) }
+        } else {
+            update { it.copy(extAtomicCounters = false) }
+        }
+    }
+
     /** 开关文案是「禁用 timer_query」，勾上等于磁盘上写 0。 */
     fun setExtTimerQueryDisabled(disabled: Boolean) = update { it.copy(extTimerQuery = !disabled) }
 
