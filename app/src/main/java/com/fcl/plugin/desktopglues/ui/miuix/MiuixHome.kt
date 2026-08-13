@@ -151,7 +151,7 @@ private fun Wordmark(version: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = buildAnnotatedString {
-                withStyle(SpanStyle(color = MiuixTheme.colorScheme.onBackground)) { append("Mobile") }
+                withStyle(SpanStyle(color = MiuixTheme.colorScheme.onBackground)) { append("Desktop") }
                 withStyle(SpanStyle(color = MiuixTheme.colorScheme.primary)) { append("Glues") }
             },
             style = MiuixTheme.textStyles.title1,

@@ -155,7 +155,7 @@ private fun Wordmark(version: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = buildAnnotatedString {
-                withStyle(SpanStyle(color = MaterialTheme.colorScheme.onSurface)) { append("Mobile") }
+                withStyle(SpanStyle(color = MaterialTheme.colorScheme.onSurface)) { append("Desktop") }
                 withStyle(SpanStyle(color = MaterialTheme.colorScheme.primary)) { append("Glues") }
             },
             style = MaterialTheme.typography.displaySmall.copy(
