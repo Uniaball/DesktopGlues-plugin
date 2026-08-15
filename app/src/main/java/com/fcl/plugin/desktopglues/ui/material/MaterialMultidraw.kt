@@ -44,7 +44,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.DialogProperties
-import androidx.compose.material3.Switch
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fcl.plugin.desktopglues.R
 import com.fcl.plugin.desktopglues.settings.MGConfig
@@ -126,16 +125,62 @@ fun ColumnScope.MultidrawOrderContent(controller: AppController, config: MGConfi
     )
 
     // 跑分只测得出「这个函数上哪个方案快」，那就把结果按函数交出去，别硬合成一份全局顺序。
+    // 右侧的「高端检测」只在排序是自动排序（采用过跑分）时现身：结论已在采用那一刻
+    // 记进配置，点一下就看，不用为了一个档位再跑一趟分。
+    var showTierDialog by remember { mutableStateOf(false) }
     Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp)) {
         FilledTonalButton(
             onClick = { controller.runMultidrawBench(AppController.BenchTarget.AllEntries) },
         ) {
             Text(stringResource(R.string.md_bench_run_all))
         }
+        Spacer(Modifier.weight(1f))
+        AnimatedVisibility(
+            visible = settings.benchAdopted && settings.adoptedTier != null,
+            enter = fadeIn(),
+            exit = fadeOut(),
+        ) {
+            OutlinedButton(onClick = { showTierDialog = true }) {
+                Text(stringResource(R.string.md_bench_detect_tier))
+            }
+        }
+    }
+    if (showTierDialog) {
+        settings.adoptedTier?.let { tier ->
+            AlertDialog(
+                onDismissRequest = { showTierDialog = false },
+                title = { Text(stringResource(R.string.md_bench_detect_tier)) },
+                text = {
+                    Column {
+                        Text(
+                            text = stringResource(
+                                if (tier == MultidrawBenchTier.HighEnd) {
+                                    R.string.md_bench_tier_high
+                                } else {
+                                    R.string.md_bench_tier_low
+                                },
+                            ),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                        Text(
+                            text = stringResource(R.string.md_bench_tier_note),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(top = 8.dp),
+                        )
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = { showTierDialog = false }) {
+                        Text(stringResource(R.string.dialog_positive))
+                    }
+                },
+            )
+        }
     }
 
     MultidrawEntry.entries.forEach { entry ->
-        var detectTier by remember(entry) { mutableStateOf(false) }
         val hasException = settings.hasException(entry)
         SwitchPreferenceRow(
             title = entry.glFunction,
@@ -170,25 +215,12 @@ fun ColumnScope.MultidrawOrderContent(controller: AppController, config: MGConfi
                 Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp)) {
                     FilledTonalButton(
                         onClick = {
-                            controller.runMultidrawBench(
-                                AppController.BenchTarget.Entry(entry, detectTier = detectTier),
-                            )
+                            controller.runMultidrawBench(AppController.BenchTarget.Entry(entry))
                         },
                     ) {
                         Text(stringResource(R.string.md_bench_run_entry))
                     }
                     Spacer(Modifier.weight(1f))
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = stringResource(R.string.md_bench_detect_tier),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                        Switch(
-                            checked = detectTier,
-                            onCheckedChange = { detectTier = it },
-                        )
-                    }
                     AnimatedVisibility(
                         visible = settings.exceptionCustomized(entry),
                         enter = fadeIn(),

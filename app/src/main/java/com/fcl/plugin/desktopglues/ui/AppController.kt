@@ -530,16 +530,22 @@ class AppController(
         update {
             val order = it.multidraw.globalOrder.toMutableList()
             if (!order.moveItem(from, to)) return@update it
-            it.copy(multidraw = it.multidraw.withGlobalOrder(order))
+            it.copy(multidraw = it.multidraw.withGlobalOrder(order).withoutAdoptedBench())
         }
     }
 
     fun resetMultidrawGlobalOrder() {
-        update { it.copy(multidraw = it.multidraw.withGlobalOrder(MultidrawOrderItem.DefaultOrder)) }
+        update {
+            it.copy(
+                multidraw = it.multidraw
+                    .withGlobalOrder(MultidrawOrderItem.DefaultOrder)
+                    .withoutAdoptedBench(),
+            )
+        }
     }
 
     fun setMultidrawException(entry: MultidrawEntry, enabled: Boolean) {
-        update { it.copy(multidraw = it.multidraw.withException(entry, enabled)) }
+        update { it.copy(multidraw = it.multidraw.withException(entry, enabled).withoutAdoptedBench()) }
     }
 
     /** 把某个函数的例外排序退回它的默认值——全局排序在这个函数上的展开。 */
@@ -547,7 +553,8 @@ class AppController(
         update {
             it.copy(
                 multidraw = it.multidraw
-                    .withExceptionOrder(entry, it.multidraw.globalOrderFor(entry)),
+                    .withExceptionOrder(entry, it.multidraw.globalOrderFor(entry))
+                    .withoutAdoptedBench(),
             )
         }
     }
@@ -557,7 +564,7 @@ class AppController(
         update {
             val order = it.multidraw.effectiveOrderFor(entry).toMutableList()
             if (!order.moveItem(from, to)) return@update it
-            it.copy(multidraw = it.multidraw.withExceptionOrder(entry, order))
+            it.copy(multidraw = it.multidraw.withExceptionOrder(entry, order).withoutAdoptedBench())
         }
     }
 
@@ -578,14 +585,7 @@ class AppController(
      */
     sealed interface BenchTarget {
         data object AllEntries : BenchTarget
-
-        /**
-         * 只测某一个函数。
-         *
-         * [detectTier] 开着时顺带按判据函数推断设备档位：native 每次都会测全部分支，
-         * 判据函数的数据一直都在，只是要不要把结论摆出来由这次点击决定。
-         */
-        data class Entry(val entry: MultidrawEntry, val detectTier: Boolean = false) : BenchTarget
+        data class Entry(val entry: MultidrawEntry) : BenchTarget
     }
 
     /**
@@ -801,15 +801,7 @@ class AppController(
                     rankings = rankings,
                     quality = report.quality.filterKeys { it in rankings },
                     angleNote = benchAngleNote(report, borrowed = angleDirectory != null),
-                    tier = when (target) {
-                        is BenchTarget.AllEntries -> MultidrawBenchAnalyzer.inferTier(report)
-                        is BenchTarget.Entry ->
-                            if (target.detectTier) {
-                                MultidrawBenchAnalyzer.inferTier(report)
-                            } else {
-                                null
-                            }
-                    },
+                    tier = MultidrawBenchAnalyzer.inferTier(report),
                 )
             }
         }
@@ -961,7 +953,8 @@ class AppController(
             val multidraw = done.rankings.entries.fold(config.multidraw) { settings, (entry, ranking) ->
                 settings.withExceptionOrder(entry, ranking.map { it.item })
             }
-            config.copy(multidraw = multidraw)
+            // 采用即自动排序：档位结论一并记下，供「高端检测」按钮读取。
+            config.copy(multidraw = multidraw.withAdoptedBench(done.tier))
         }
         mutableBenchState.value = null
     }

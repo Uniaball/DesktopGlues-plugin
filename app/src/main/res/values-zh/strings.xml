@@ -43,6 +43,7 @@
     <string name="md_bench_run_all">为每个函数分别 Benchmark</string>
     <string name="md_bench_run_entry">Benchmark 此函数</string>
     <string name="md_bench_detect_tier">高端检测</string>
+    <string name="md_bench_tier_note">依据上次采用自动排序跑分时推断。重新采用新的跑分结果会刷新它。</string>
     <string name="md_bench_nothing">此设备上没有任何方案可供测量</string>
     <string name="md_reset_default">恢复默认顺序</string>
     <string name="md_bench_running_title">Benchmark</string>

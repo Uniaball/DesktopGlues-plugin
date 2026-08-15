@@ -201,6 +201,15 @@ enum class MultidrawEntry(
 data class MultidrawSettings(
     val globalOrder: List<MultidrawOrderItem> = MultidrawOrderItem.DefaultOrder,
     val exceptions: Map<MultidrawEntry, List<MultidrawBackend>> = emptyMap(),
+    /**
+     * 排序采用了跑分结果（自动排序）。
+     *
+     * 为「高端检测」按钮决定现身与否：采用过自动排序就亮着，任何手动排序动作
+     * 都会把它清掉，直到下一次采用。tier 是设备级的结论，与具体函数无关。
+     */
+    val benchAdopted: Boolean = false,
+    /** 最近一次采用跑分时推断的设备档位；null = 没有结论。 */
+    val adoptedTier: MultidrawBenchTier? = null,
 ) {
     /** 全局排序在某个函数上的展开：native 落到对应 EXT 实现，去重后补齐漏项。 */
     fun globalOrderFor(entry: MultidrawEntry): List<MultidrawBackend> = entry.normalize(
@@ -231,6 +240,13 @@ data class MultidrawSettings(
 
     fun withExceptionOrder(entry: MultidrawEntry, order: List<MultidrawBackend>): MultidrawSettings =
         copy(exceptions = exceptions + (entry to entry.normalize(order)))
+
+    /** 采用跑分结果：排序从此是「自动」的，档位一并记下。 */
+    fun withAdoptedBench(tier: MultidrawBenchTier?): MultidrawSettings =
+        copy(benchAdopted = true, adoptedTier = tier)
+
+    /** 手动排序：来源不再是自动的，高端检测按钮随之隐藏。 */
+    fun withoutAdoptedBench(): MultidrawSettings = copy(benchAdopted = false)
 
     val globalCustomized: Boolean get() = globalOrder != MultidrawOrderItem.DefaultOrder
 

@@ -32,6 +32,8 @@ internal object MGConfigCodec {
     private const val KEY_MULTIDRAW_DISABLE_LEGACY = "multidrawDisableBackends"
 
     private const val KEY_MULTIDRAW_ORDER = "multidrawOrder"
+    private const val KEY_BENCH_ADOPTED = "multidrawBenchAdopted"
+    private const val KEY_BENCH_TIER = "multidrawBenchTier"
     private const val KEY_DEPTH_CLEAR_FIX = "angleDepthClearFixMode"
     private const val KEY_GL_VERSION = "customGLVersion"
     private const val KEY_FSR1 = "fsr1Setting"
@@ -47,6 +49,8 @@ internal object MGConfigCodec {
         KEY_MULTIDRAW_LEGACY,
         KEY_MULTIDRAW_DISABLE_LEGACY,
         KEY_MULTIDRAW_ORDER,
+        KEY_BENCH_ADOPTED,
+        KEY_BENCH_TIER,
         KEY_DEPTH_CLEAR_FIX,
         KEY_GL_VERSION,
         KEY_FSR1,
@@ -106,6 +110,9 @@ internal object MGConfigCodec {
                 raw.split(',', ';').mapNotNull { MultidrawBackend.parse(it) },
             )
         }.toMap(),
+        benchAdopted = root.boolOrNull(KEY_BENCH_ADOPTED) ?: false,
+        adoptedTier = root.stringOrNull(KEY_BENCH_TIER)
+            ?.let { name -> MultidrawBenchTier.entries.firstOrNull { it.name == name } },
     )
 
     private fun JsonObject.encodeMultidraw(settings: MultidrawSettings) {
@@ -115,6 +122,14 @@ internal object MGConfigCodec {
         } else {
             addProperty(KEY_MULTIDRAW_ORDER, settings.globalOrder.joinToString(",") { it.key })
         }
+
+        // 排序来源与档位：只在「采用过跑分」时落盘，手动排序后由 Controller 清掉。
+        if (settings.benchAdopted) {
+            addProperty(KEY_BENCH_ADOPTED, 1)
+        } else {
+            remove(KEY_BENCH_ADOPTED)
+        }
+        settings.adoptedTier?.let { addProperty(KEY_BENCH_TIER, it.name) } ?: remove(KEY_BENCH_TIER)
 
         MultidrawEntry.entries.forEach { entry ->
             val exception = settings.exceptions[entry]

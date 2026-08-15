@@ -59,7 +59,6 @@ import top.yukonga.miuix.kmp.basic.LinearProgressIndicator
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Surface
 import top.yukonga.miuix.kmp.basic.Text
-import top.yukonga.miuix.kmp.basic.Switch
 import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.theme.MiuixTheme
@@ -122,15 +121,68 @@ fun ColumnScope.MiuixMultidrawOrderContent(controller: AppController, config: MG
     SmallTitle(text = stringResource(R.string.md_exceptions_group))
 
     // 跑分只测得出「这个函数上哪个方案快」，那就把结果按函数交出去，别硬合成一份全局顺序。
-    TextButton(
-        text = stringResource(R.string.md_bench_run_all),
-        onClick = { controller.runMultidrawBench(AppController.BenchTarget.AllEntries) },
+    // 右侧的「高端检测」只在排序是自动排序（采用过跑分）时现身：结论已在采用那一刻
+    // 记进配置，点一下就看，不用为了一个档位再跑一趟分。
+    var showTierDialog by remember { mutableStateOf(false) }
+    Row(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
-        colors = ButtonDefaults.textButtonColorsPrimary(),
-    )
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        TextButton(
+            text = stringResource(R.string.md_bench_run_all),
+            onClick = { controller.runMultidrawBench(AppController.BenchTarget.AllEntries) },
+            modifier = Modifier.weight(1f),
+            colors = ButtonDefaults.textButtonColorsPrimary(),
+        )
+        AnimatedVisibility(
+            visible = settings.benchAdopted && settings.adoptedTier != null,
+            enter = fadeIn(),
+            exit = fadeOut(),
+        ) {
+            TextButton(
+                text = stringResource(R.string.md_bench_detect_tier),
+                onClick = { showTierDialog = true },
+            )
+        }
+    }
+    settings.adoptedTier?.takeIf { settings.benchAdopted && showTierDialog }?.let { tier ->
+        SuperDialog(
+            show = true,
+            title = stringResource(R.string.md_bench_detect_tier),
+            onDismissRequest = { showTierDialog = false },
+        ) {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = stringResource(
+                        if (tier == MultidrawBenchTier.HighEnd) {
+                            R.string.md_bench_tier_high
+                        } else {
+                            R.string.md_bench_tier_low
+                        },
+                    ),
+                    style = MiuixTheme.textStyles.body1,
+                    color = MiuixTheme.colorScheme.primary,
+                )
+                Text(
+                    text = stringResource(R.string.md_bench_tier_note),
+                    style = MiuixTheme.textStyles.footnote1,
+                    color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
+                    modifier = Modifier.padding(top = 8.dp),
+                )
+                Row(
+                    horizontalArrangement = Arrangement.End,
+                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                ) {
+                    TextButton(
+                        text = stringResource(R.string.dialog_positive),
+                        onClick = { showTierDialog = false },
+                    )
+                }
+            }
+        }
+    }
 
     MultidrawEntry.entries.forEach { entry ->
-        var detectTier by remember(entry) { mutableStateOf(false) }
         val hasException = settings.hasException(entry)
         MiuixSwitchRow(
             title = entry.glFunction,
@@ -169,26 +221,10 @@ fun ColumnScope.MiuixMultidrawOrderContent(controller: AppController, config: MG
                     TextButton(
                         text = stringResource(R.string.md_bench_run_entry),
                         onClick = {
-                            controller.runMultidrawBench(
-                                AppController.BenchTarget.Entry(entry, detectTier = detectTier),
-                            )
+                            controller.runMultidrawBench(AppController.BenchTarget.Entry(entry))
                         },
                         modifier = Modifier.weight(1f),
                     )
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    ) {
-                        Text(
-                            text = stringResource(R.string.md_bench_detect_tier),
-                            style = MiuixTheme.textStyles.footnote2,
-                            color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
-                        )
-                        Switch(
-                            checked = detectTier,
-                            onCheckedChange = { detectTier = it },
-                        )
-                    }
                     AnimatedVisibility(
                         visible = settings.exceptionCustomized(entry),
                         enter = fadeIn(),

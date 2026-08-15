@@ -50,6 +50,7 @@
     <string name="md_bench_run_all">Benchmark every function</string>
     <string name="md_bench_run_entry">Benchmark this function</string>
     <string name="md_bench_detect_tier">High-end detect</string>
+    <string name="md_bench_tier_note">Inferred from the benchmark order you adopted last time. Adopting a fresh benchmark result updates it.</string>
     <string name="md_bench_nothing">no strategy could be measured on this device</string>
     <string name="md_reset_default">Restore default</string>
     <string name="md_bench_running_title">Benchmark</string>
