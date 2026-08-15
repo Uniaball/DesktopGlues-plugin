@@ -27,6 +27,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -56,6 +59,7 @@ import top.yukonga.miuix.kmp.basic.LinearProgressIndicator
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Surface
 import top.yukonga.miuix.kmp.basic.Text
+import top.yukonga.miuix.kmp.basic.Switch
 import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.theme.MiuixTheme
@@ -126,6 +130,7 @@ fun ColumnScope.MiuixMultidrawOrderContent(controller: AppController, config: MG
     )
 
     MultidrawEntry.entries.forEach { entry ->
+        var detectTier by remember(entry) { mutableStateOf(false) }
         val hasException = settings.hasException(entry)
         MiuixSwitchRow(
             title = entry.glFunction,
@@ -164,10 +169,26 @@ fun ColumnScope.MiuixMultidrawOrderContent(controller: AppController, config: MG
                     TextButton(
                         text = stringResource(R.string.md_bench_run_entry),
                         onClick = {
-                            controller.runMultidrawBench(AppController.BenchTarget.Entry(entry))
+                            controller.runMultidrawBench(
+                                AppController.BenchTarget.Entry(entry, detectTier = detectTier),
+                            )
                         },
                         modifier = Modifier.weight(1f),
                     )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        Text(
+                            text = stringResource(R.string.md_bench_detect_tier),
+                            style = MiuixTheme.textStyles.footnote2,
+                            color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
+                        )
+                        Switch(
+                            checked = detectTier,
+                            onCheckedChange = { detectTier = it },
+                        )
+                    }
                     AnimatedVisibility(
                         visible = settings.exceptionCustomized(entry),
                         enter = fadeIn(),

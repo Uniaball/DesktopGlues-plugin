@@ -578,7 +578,14 @@ class AppController(
      */
     sealed interface BenchTarget {
         data object AllEntries : BenchTarget
-        data class Entry(val entry: MultidrawEntry) : BenchTarget
+
+        /**
+         * 只测某一个函数。
+         *
+         * [detectTier] 开着时顺带按判据函数推断设备档位：native 每次都会测全部分支，
+         * 判据函数的数据一直都在，只是要不要把结论摆出来由这次点击决定。
+         */
+        data class Entry(val entry: MultidrawEntry, val detectTier: Boolean = false) : BenchTarget
     }
 
     /**
@@ -794,7 +801,15 @@ class AppController(
                     rankings = rankings,
                     quality = report.quality.filterKeys { it in rankings },
                     angleNote = benchAngleNote(report, borrowed = angleDirectory != null),
-                    tier = MultidrawBenchAnalyzer.inferTier(report),
+                    tier = when (target) {
+                        is BenchTarget.AllEntries -> MultidrawBenchAnalyzer.inferTier(report)
+                        is BenchTarget.Entry ->
+                            if (target.detectTier) {
+                                MultidrawBenchAnalyzer.inferTier(report)
+                            } else {
+                                null
+                            }
+                    },
                 )
             }
         }

@@ -32,6 +32,9 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,6 +44,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.DialogProperties
+import androidx.compose.material3.Switch
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fcl.plugin.desktopglues.R
 import com.fcl.plugin.desktopglues.settings.MGConfig
@@ -131,6 +135,7 @@ fun ColumnScope.MultidrawOrderContent(controller: AppController, config: MGConfi
     }
 
     MultidrawEntry.entries.forEach { entry ->
+        var detectTier by remember(entry) { mutableStateOf(false) }
         val hasException = settings.hasException(entry)
         SwitchPreferenceRow(
             title = entry.glFunction,
@@ -165,12 +170,25 @@ fun ColumnScope.MultidrawOrderContent(controller: AppController, config: MGConfi
                 Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp)) {
                     FilledTonalButton(
                         onClick = {
-                            controller.runMultidrawBench(AppController.BenchTarget.Entry(entry))
+                            controller.runMultidrawBench(
+                                AppController.BenchTarget.Entry(entry, detectTier = detectTier),
+                            )
                         },
                     ) {
                         Text(stringResource(R.string.md_bench_run_entry))
                     }
                     Spacer(Modifier.weight(1f))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = stringResource(R.string.md_bench_detect_tier),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        Switch(
+                            checked = detectTier,
+                            onCheckedChange = { detectTier = it },
+                        )
+                    }
                     AnimatedVisibility(
                         visible = settings.exceptionCustomized(entry),
                         enter = fadeIn(),
