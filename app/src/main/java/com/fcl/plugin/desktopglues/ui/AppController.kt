@@ -20,6 +20,7 @@ import com.fcl.plugin.desktopglues.settings.AuthController
 import com.fcl.plugin.desktopglues.settings.AuthMethod
 import com.fcl.plugin.desktopglues.settings.ConfigLoadResult
 import com.fcl.plugin.desktopglues.settings.ConfigStoreEvent
+import com.fcl.plugin.desktopglues.settings.DebugScope
 import com.fcl.plugin.desktopglues.settings.DepthClearFixMode
 import com.fcl.plugin.desktopglues.settings.Fsr1Preset
 import com.fcl.plugin.desktopglues.settings.GlVersion
@@ -442,6 +443,8 @@ class AppController(
     val benchOutdated: MutableSharedFlow<Unit> = mutableBenchOutdated
 
     fun selectNoError(target: NoErrorConfig) = update { it.copy(noError = target) }
+
+    fun selectDebugScope(target: DebugScope) = update { it.copy(debugScope = target) }
 
     fun selectGlVersion(target: GlVersion) {
         val current = configStore.config.value ?: return

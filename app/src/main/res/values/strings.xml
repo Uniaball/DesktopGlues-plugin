@@ -34,6 +34,12 @@
     <string name="option_no_error_enable">Do not ignore</string>
     <string name="option_no_error_disable_pri">Ignore shader/program error</string>
     <string name="option_no_error_disable_sec">Ignore shader/program/framebuffer error</string>
+    <string name="option_debug">Debug logs</string>
+    <string name="option_debug_disabled">Not enabled</string>
+    <string name="option_debug_shader">shader, program, framebuffer, glsl</string>
+    <string name="option_debug_render">shader, program, framebuffer, glsl, texture, buffer, drawing, pixel, getter, enable, gl</string>
+    <string name="option_debug_frame">shader, program, framebuffer, glsl, texture, buffer, drawing, pixel, getter, enable, gl, egl, gles, multidraw, bench</string>
+    <string name="option_debug_all">all</string>
 
     <string name="option_multidraw">MultiDraw strategy order</string>
     <string name="md_summary_default">Default order</string>

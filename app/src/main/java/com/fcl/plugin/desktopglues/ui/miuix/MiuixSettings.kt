@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fcl.plugin.desktopglues.R
 import com.fcl.plugin.desktopglues.settings.AngleConfig
+import com.fcl.plugin.desktopglues.settings.DebugScope
 import com.fcl.plugin.desktopglues.settings.DepthClearFixMode
 import com.fcl.plugin.desktopglues.settings.GlVersion
 import com.fcl.plugin.desktopglues.settings.GlslCacheScale
@@ -221,6 +222,12 @@ private fun ConfigSections(controller: AppController, config: MGConfig) {
                 options = GlVersion.entries,
                 selected = config.glVersion,
                 onSelect = controller::selectGlVersion,
+            )
+            OptionRow(
+                title = stringResource(R.string.option_debug),
+                options = DebugScope.entries,
+                selected = config.debugScope,
+                onSelect = controller::selectDebugScope,
             )
 
             MiuixExpandableSection(

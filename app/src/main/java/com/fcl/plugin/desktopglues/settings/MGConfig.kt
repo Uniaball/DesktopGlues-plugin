@@ -52,6 +52,24 @@ enum class NoErrorConfig(override val wire: Int, @param:StringRes private val la
 }
 
 /**
+ * `debugScope`。
+ *
+ * 运行时调试日志的覆盖范围，按源文件划分（native 端 `gl/log.cpp` 的
+ * `mg_debug_enabled` 逐文件匹配）：后一档包含前一档的全部文件。
+ * 档位文案直接用文件名（去后缀），与 native 的匹配表一一对应。
+ */
+enum class DebugScope(override val wire: Int, @param:StringRes private val labelRes: Int) :
+    SpinnerOption {
+    Disabled(0, R.string.option_debug_disabled),
+    Shader(1, R.string.option_debug_shader),
+    Render(2, R.string.option_debug_render),
+    Frame(3, R.string.option_debug_frame),
+    All(4, R.string.option_debug_all);
+
+    override fun label(context: Context): CharSequence = context.getString(labelRes)
+}
+
+/**
  * MultiDraw 的一种实现方式。
  *
  * 写进 `config.json` 的是 [key] 这个**名字**而不是序号——native 特意这么改的：
@@ -389,6 +407,8 @@ data class MGConfig(
     val extTimerQuery: Boolean = true,
     val extDirectStateAccess: Boolean = false,
     val fsr1: Fsr1Preset = Fsr1Preset.Disabled,
+    /** 运行时调试日志的覆盖范围（`debugScope`）。 */
+    val debugScope: DebugScope = DebugScope.Disabled,
 ) {
     val fsr1Enabled: Boolean get() = fsr1 != Fsr1Preset.Disabled
 

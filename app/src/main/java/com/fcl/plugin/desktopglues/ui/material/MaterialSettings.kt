@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fcl.plugin.desktopglues.R
 import com.fcl.plugin.desktopglues.settings.AngleConfig
+import com.fcl.plugin.desktopglues.settings.DebugScope
 import com.fcl.plugin.desktopglues.settings.DepthClearFixMode
 import com.fcl.plugin.desktopglues.settings.GlVersion
 import com.fcl.plugin.desktopglues.settings.GlslCacheScale
@@ -206,6 +207,11 @@ private fun ConfigSections(controller: AppController, config: MGConfig) {
                 summary = config.glVersion.label(context).toString(),
                 onClick = { choice = ChoiceTarget.GlVersion },
             )
+            TextPreferenceRow(
+                title = stringResource(R.string.option_debug),
+                summary = config.debugScope.label(context).toString(),
+                onClick = { choice = ChoiceTarget.Debug },
+            )
 
             ExpandableSection(
                 title = stringResource(R.string.option_multidraw),
@@ -251,6 +257,14 @@ private fun ConfigSections(controller: AppController, config: MGConfig) {
             options = GlVersion.entries,
             selected = config.glVersion,
             onSelect = controller::selectGlVersion,
+            onDismiss = { choice = null },
+        )
+
+        ChoiceTarget.Debug -> OptionDialog(
+            title = stringResource(R.string.option_debug),
+            options = DebugScope.entries,
+            selected = config.debugScope,
+            onSelect = controller::selectDebugScope,
             onDismiss = { choice = null },
         )
 
@@ -310,4 +324,4 @@ private fun <T : SpinnerOption> OptionDialog(
     )
 }
 
-private enum class ChoiceTarget { Angle, NoError, DepthClear, GlVersion }
+private enum class ChoiceTarget { Angle, NoError, DepthClear, GlVersion, Debug }

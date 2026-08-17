@@ -37,6 +37,7 @@ internal object MGConfigCodec {
     private const val KEY_DEPTH_CLEAR_FIX = "angleDepthClearFixMode"
     private const val KEY_GL_VERSION = "customGLVersion"
     private const val KEY_FSR1 = "fsr1Setting"
+    private const val KEY_DEBUG_SCOPE = "debugScope"
 
     private val KNOWN_KEYS = listOf(
         KEY_ANGLE,
@@ -54,6 +55,7 @@ internal object MGConfigCodec {
         KEY_DEPTH_CLEAR_FIX,
         KEY_GL_VERSION,
         KEY_FSR1,
+        KEY_DEBUG_SCOPE,
     ) + MultidrawEntry.entries.flatMap { listOf(it.orderKey, it.legacyModeKey) }
 
     fun decode(root: JsonObject): MGConfig {
@@ -77,6 +79,7 @@ internal object MGConfigCodec {
             extAtomicCounters = root.boolOrNull(KEY_EXT_ATOMIC_COUNTERS)
                 ?: defaults.extAtomicCounters,
             fsr1 = Fsr1Preset.entries.fromWire(root.intOrNull(KEY_FSR1), defaults.fsr1),
+            debugScope = DebugScope.entries.fromWire(root.intOrNull(KEY_DEBUG_SCOPE), defaults.debugScope),
         )
     }
 
@@ -92,6 +95,7 @@ internal object MGConfigCodec {
             addProperty(KEY_DEPTH_CLEAR_FIX, config.depthClearFix.wire)
             addProperty(KEY_GL_VERSION, config.glVersion.wire)
             addProperty(KEY_FSR1, config.fsr1.wire)
+            addProperty(KEY_DEBUG_SCOPE, config.debugScope.wire)
             encodeMultidraw(config.multidraw)
         }
 
