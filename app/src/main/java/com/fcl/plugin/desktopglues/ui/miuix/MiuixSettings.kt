@@ -2,6 +2,7 @@
 
 package com.fcl.plugin.desktopglues.ui.miuix
 
+import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.expandVertically
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -39,11 +41,14 @@ import com.fcl.plugin.desktopglues.settings.SpinnerOption
 import com.fcl.plugin.desktopglues.settings.UiStyle
 import com.fcl.plugin.desktopglues.ui.AppController
 import com.fcl.plugin.desktopglues.ui.SettingsLoadState
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Button
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.TabRowWithContour
 import top.yukonga.miuix.kmp.basic.Text
+import top.yukonga.miuix.kmp.basic.TextButton
+import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.scrollEndHaptic
 
@@ -145,6 +150,7 @@ private fun ConfigSections(controller: AppController, config: MGConfig) {
     val deviceInfo by controller.deviceInfo.collectAsStateWithLifecycle()
     val cacheBytes by controller.configStore.glslCacheBytes.collectAsStateWithLifecycle()
     var multidrawExpanded by remember { mutableStateOf(false) }
+    var debugDialog by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.fillMaxWidth()) {
         MiuixGroup(title = stringResource(R.string.settings_group_render)) {
@@ -223,11 +229,10 @@ private fun ConfigSections(controller: AppController, config: MGConfig) {
                 selected = config.glVersion,
                 onSelect = controller::selectGlVersion,
             )
-            OptionRow(
+            BasicComponent(
                 title = stringResource(R.string.option_debug),
-                options = DebugScope.entries,
-                selected = config.debugScope,
-                onSelect = controller::selectDebugScope,
+                summary = debugScopeSummary(context, config.debugScope),
+                onClick = { debugDialog = true },
             )
 
             MiuixExpandableSection(
@@ -239,8 +244,57 @@ private fun ConfigSections(controller: AppController, config: MGConfig) {
                 MiuixMultidrawOrderContent(controller, config)
             }
         }
+
+        MiuixDebugScopeDialog(
+            show = debugDialog,
+            config = config,
+            onToggle = controller::toggleDebugScope,
+            onDismiss = { debugDialog = false },
+        )
     }
 
+}
+
+/** 调试日志的多选弹窗：一行一个源文件，开关即点即生效。 */
+@Composable
+private fun MiuixDebugScopeDialog(
+    show: Boolean,
+    config: MGConfig,
+    onToggle: (DebugScope) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    SuperDialog(
+        show = show,
+        title = stringResource(R.string.option_debug),
+        onDismissRequest = onDismiss,
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(max = 420.dp)
+                .verticalScroll(rememberScrollState()),
+        ) {
+            DebugScope.entries.forEach { file ->
+                MiuixSwitchRow(
+                    title = file.label,
+                    checked = file in config.debugScope,
+                    onCheckedChange = { onToggle(file) },
+                )
+            }
+            Spacer(Modifier.height(12.dp))
+            TextButton(
+                text = stringResource(R.string.dialog_negative),
+                onClick = onDismiss,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+    }
+}
+
+/** 调试日志行的摘要：已选文件按声明顺序连接，全不选显示「不启用」。 */
+private fun debugScopeSummary(context: Context, files: Set<DebugScope>): String {
+    if (files.isEmpty()) return context.getString(R.string.option_debug_disabled)
+    return DebugScope.entries.filter { it in files }.joinToString(", ") { it.label }
 }
 
 /**

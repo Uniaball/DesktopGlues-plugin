@@ -2,6 +2,7 @@
 
 package com.fcl.plugin.desktopglues.ui.material
 
+import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.expandVertically
@@ -15,11 +16,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -209,7 +213,7 @@ private fun ConfigSections(controller: AppController, config: MGConfig) {
             )
             TextPreferenceRow(
                 title = stringResource(R.string.option_debug),
-                summary = config.debugScope.label(context).toString(),
+                summary = debugScopeSummary(context, config.debugScope),
                 onClick = { choice = ChoiceTarget.Debug },
             )
 
@@ -260,11 +264,9 @@ private fun ConfigSections(controller: AppController, config: MGConfig) {
             onDismiss = { choice = null },
         )
 
-        ChoiceTarget.Debug -> OptionDialog(
-            title = stringResource(R.string.option_debug),
-            options = DebugScope.entries,
-            selected = config.debugScope,
-            onSelect = controller::selectDebugScope,
+        ChoiceTarget.Debug -> DebugScopeDialog(
+            config = config,
+            onToggle = controller::toggleDebugScope,
             onDismiss = { choice = null },
         )
 
@@ -322,6 +324,43 @@ private fun <T : SpinnerOption> OptionDialog(
         onSelect = { onSelect(options[it]) },
         onDismiss = onDismiss,
     )
+}
+
+/** 调试日志的多选弹窗：一行一个源文件，开关即点即生效。 */
+@Composable
+private fun DebugScopeDialog(
+    config: MGConfig,
+    onToggle: (DebugScope) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.option_debug)) },
+        text = {
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .selectableGroup(),
+            ) {
+                DebugScope.entries.forEach { file ->
+                    SwitchPreferenceRow(
+                        title = file.label,
+                        checked = file in config.debugScope,
+                        onCheckedChange = { onToggle(file) },
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.dialog_negative)) }
+        },
+    )
+}
+
+/** 调试日志行的摘要：已选文件按声明顺序连接，全不选显示「不启用」。 */
+private fun debugScopeSummary(context: Context, files: Set<DebugScope>): String {
+    if (files.isEmpty()) return context.getString(R.string.option_debug_disabled)
+    return DebugScope.entries.filter { it in files }.joinToString(", ") { it.label }
 }
 
 private enum class ChoiceTarget { Angle, NoError, DepthClear, GlVersion, Debug }

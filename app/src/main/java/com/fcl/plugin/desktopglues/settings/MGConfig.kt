@@ -52,21 +52,31 @@ enum class NoErrorConfig(override val wire: Int, @param:StringRes private val la
 }
 
 /**
- * `debugScope`。
+ * `debugScope` 位掩码里的一枚：一个源文件（native 端 `gl/log.cpp` 的
+ * `kDebugFiles` 表按文件匹配）。位序与核心一一对应，不能改动；wire 值直写
+ * config.json，多选 = 各 wire 之和，0 = 不启用。
  *
- * 运行时调试日志的覆盖范围，按源文件划分（native 端 `gl/log.cpp` 的
- * `mg_debug_enabled` 逐文件匹配）：后一档包含前一档的全部文件。
- * 档位文案直接用文件名（去后缀），与 native 的匹配表一一对应。
+ * 标签是文件名去掉后缀；两个 loader 同名，用目录区分。
  */
-enum class DebugScope(override val wire: Int, @param:StringRes private val labelRes: Int) :
-    SpinnerOption {
-    Disabled(0, R.string.option_debug_disabled),
-    Shader(1, R.string.option_debug_shader),
-    Render(2, R.string.option_debug_render),
-    Frame(3, R.string.option_debug_frame),
-    All(4, R.string.option_debug_all);
-
-    override fun label(context: Context): CharSequence = context.getString(labelRes)
+enum class DebugScope(val wire: Int, val label: String) {
+    Shader(1 shl 0, "shader"),
+    Program(1 shl 1, "program"),
+    Framebuffer(1 shl 2, "framebuffer"),
+    GlslCache(1 shl 3, "cache"),
+    GlslForEs(1 shl 4, "glsl_for_es"),
+    Texture(1 shl 5, "texture"),
+    Buffer(1 shl 6, "buffer"),
+    Drawing(1 shl 7, "drawing"),
+    Pixel(1 shl 8, "pixel"),
+    Getter(1 shl 9, "getter"),
+    Enable(1 shl 10, "enable"),
+    Gl(1 shl 11, "gl"),
+    EglContext(1 shl 12, "context"),
+    Egl(1 shl 13, "egl"),
+    EglLoader(1 shl 14, "egl/loader"),
+    GlesLoader(1 shl 15, "gles/loader"),
+    Multidraw(1 shl 16, "multidraw"),
+    Bench(1 shl 17, "multidraw_bench"),
 }
 
 /**
@@ -407,8 +417,8 @@ data class MGConfig(
     val extTimerQuery: Boolean = true,
     val extDirectStateAccess: Boolean = false,
     val fsr1: Fsr1Preset = Fsr1Preset.Disabled,
-    /** 运行时调试日志的覆盖范围（`debugScope`）。 */
-    val debugScope: DebugScope = DebugScope.Disabled,
+    /** 运行时调试日志按文件打开的集合（`debugScope` 位掩码）。 */
+    val debugScope: Set<DebugScope> = emptySet(),
 ) {
     val fsr1Enabled: Boolean get() = fsr1 != Fsr1Preset.Disabled
 

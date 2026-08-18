@@ -29,10 +29,6 @@
     <string name="option_no_error_disable_sec">忽略 shader/program/framebuffer 报错</string>
     <string name="option_debug">调试日志</string>
     <string name="option_debug_disabled">不启用</string>
-    <string name="option_debug_shader">shader, program, framebuffer, glsl</string>
-    <string name="option_debug_render">shader, program, framebuffer, glsl, texture, buffer, drawing, pixel, getter, enable, gl</string>
-    <string name="option_debug_frame">shader, program, framebuffer, glsl, texture, buffer, drawing, pixel, getter, enable, gl, egl, gles, multidraw, bench</string>
-    <string name="option_debug_all">all</string>
 
     <string name="option_multidraw">MultiDraw 方案排序</string>
     <string name="md_summary_default">默认顺序</string>

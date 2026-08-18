@@ -444,7 +444,9 @@ class AppController(
 
     fun selectNoError(target: NoErrorConfig) = update { it.copy(noError = target) }
 
-    fun selectDebugScope(target: DebugScope) = update { it.copy(debugScope = target) }
+    fun toggleDebugScope(file: DebugScope) = update {
+        it.copy(debugScope = if (file in it.debugScope) it.debugScope - file else it.debugScope + file)
+    }
 
     fun selectGlVersion(target: GlVersion) {
         val current = configStore.config.value ?: return
